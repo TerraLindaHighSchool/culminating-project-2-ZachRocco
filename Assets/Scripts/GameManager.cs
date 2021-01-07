@@ -18,12 +18,25 @@ public static class GameManager
         lives = value;
     }*/
 
-    //private static bool[] upgrades;
+    private static bool[] upgrades = new bool[] { false, false, false, false, false, false };
 
     /*
      * upgrade list:
-     * 
+     * none haha
      */
+
+    public static void setUpgrade(int index, bool tf)
+    {
+        upgrades[index] = tf;
+    }
+
+    public static void resetUpgrade()
+    {
+        for(int i = 1; i < upgrades.Length; i++)
+        {
+            upgrades[i] = false;
+        }
+    }
 
     public static int gotoStage(int stage)
     {

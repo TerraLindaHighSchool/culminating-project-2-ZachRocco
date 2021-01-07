@@ -77,7 +77,7 @@ public class PlayerController : MonoBehaviour
         {
             //Launch Projectile. . :D
             shotCooldown = 0.1f;
-            Instantiate(projectilePrefab, transform.position, projectilePrefab.transform.rotation);
+            Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z + 2), projectilePrefab.transform.rotation);
         }
         shotCooldown -= Time.deltaTime;
 
