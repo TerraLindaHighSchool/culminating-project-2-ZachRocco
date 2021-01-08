@@ -18,23 +18,59 @@ public static class GameManager
         lives = value;
     }*/
 
-    private static bool[] upgrades = new bool[] { false, false, false, false, false, false };
+    private static int level = 1;
+    private static int xp;
+    private static int xp_requirement = 100;
+    private static int last_xp_requirement;
+    private static int max_level = 5;
 
-    /*
-     * upgrade list:
-     * none haha
-     */
-
-    public static void setUpgrade(int index, bool tf)
+    public static void addXp(int xpToAdd)
     {
-        upgrades[index] = tf;
+        xp += xpToAdd;
+        checkLevel();
     }
 
-    public static void resetUpgrade()
+    public static int getLevel()
     {
-        for(int i = 1; i < upgrades.Length; i++)
+        return level;
+    }
+
+    public static int getXp(int type)
+    {
+        switch(type)
         {
-            upgrades[i] = false;
+            case 0:
+                return xp;
+            case 1:
+                return xp_requirement;
+            case 2:
+                return last_xp_requirement;
+            default:
+                return 0;
+        }
+    }
+
+    private static void checkLevel()
+    {
+        if(xp >= xp_requirement)
+        {
+            if (max_level > level)
+            {
+                last_xp_requirement = xp_requirement;
+                xp_requirement += level * 50;
+                level++;
+            }
+            else
+            {
+                if(xp > xp_requirement)
+                {
+                    xp = xp_requirement;
+                }
+            }
+        }
+        if(xp < last_xp_requirement)
+        {
+            xp = last_xp_requirement;
         }
     }
 
