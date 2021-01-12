@@ -10,16 +10,21 @@ public class PlayerController : MonoBehaviour
     public float verticalInput;
     private float shotCooldown;
     public float speed = 10.0f;
-    public float xRange = 20;
+    private float xRange = 12;
+    private float zRangePos = 23;
+    private float zRangeNeg = -8;
     public GameObject projectilePrefab;
     private int lives = 3;
     private bool gameover;
     public TextMeshProUGUI gameOverText;
     public GameObject menuButton;
-    public TextMeshProUGUI HUD;
+    public TextMeshProUGUI energyHUD;
+    public TextMeshProUGUI livesHUD;
+    public GameObject projectileDestroyer;
 
     private float normSpeed;
     private Scene previousScene;
+    private float iframes;
 
     // Start is called before the first frame update
     void Start()
@@ -36,8 +41,6 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        HUDManager();
-
         if (lives <= 0)
         {
             gameover = true;
@@ -66,13 +69,13 @@ public class PlayerController : MonoBehaviour
         {
             transform.position = new Vector3(xRange, transform.position.y, transform.position.z);
         }
-        if (transform.position.z < -xRange)
+        if (transform.position.z < zRangeNeg)
         {
-            transform.position = new Vector3(transform.position.x, transform.position.y, -xRange);
+            transform.position = new Vector3(transform.position.x, transform.position.y, zRangeNeg);
         }
-        if (transform.position.z > xRange)
+        if (transform.position.z > zRangePos)
         {
-            transform.position = new Vector3(transform.position.x, transform.position.y, xRange);
+            transform.position = new Vector3(transform.position.x, transform.position.y, zRangePos);
         }
 
         //fire weapon
@@ -85,10 +88,9 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.X))
         {
-            if (GameManager.getXp(0) >= GameManager.getXp(2) + 50)
+            if (GameManager.getXp(0) >= GameManager.getXp(2) + 100)
             {
-                GameManager.addXp(-50);
-                Debug.Log("bomb " + GameManager.getXp(0));
+                GameManager.addXp(-100);
             }
         }
 
@@ -102,11 +104,6 @@ public class PlayerController : MonoBehaviour
         {
             previousScene = SceneManager.GetActiveScene();
             GameManager.gotoStage(-1);
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            Debug.Log(GameManager.getLevel() + ", " + GameManager.getXp(1) + ", " + GameManager.getXp(2));
         }
     }
 
@@ -158,10 +155,24 @@ public class PlayerController : MonoBehaviour
     public void LateUpdate()
     {
         HUDManager();
+        iframes -= Time.deltaTime;
+        Debug.Log(iframes);
     }
 
     private void HUDManager()
     {
-        HUD.text = "Xp: " + (GameManager.getXp(0) - GameManager.getXp(2));
+        energyHUD.text = "<u>Energy</u>\n" + (GameManager.getXp(0));
+        livesHUD.text = "<u>Lives</u>\n" + (lives);
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Enemy") && iframes <= 0)
+        {
+            Destroy(other.gameObject);
+            lives--;
+            iframes = 2;
+            Instantiate(projectileDestroyer, new Vector3(transform.position.x, transform.position.y, transform.position.z), projectilePrefab.transform.rotation);
+        }
     }
 }

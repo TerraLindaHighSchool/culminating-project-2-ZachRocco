@@ -20,9 +20,10 @@ public static class GameManager
 
     private static int level = 1;
     private static int xp;
-    private static int xp_requirement = 100;
-    private static int last_xp_requirement;
-    private static int max_level = 5;
+    private static int xpRequirement = 100;
+    private static int lastXpRequirement;
+    private static int maxLevel = 5;
+    private static int maxXp = 500;
 
     public static void addXp(int xpToAdd)
     {
@@ -42,9 +43,9 @@ public static class GameManager
             case 0:
                 return xp;
             case 1:
-                return xp_requirement;
+                return xpRequirement;
             case 2:
-                return last_xp_requirement;
+                return lastXpRequirement;
             default:
                 return 0;
         }
@@ -52,13 +53,17 @@ public static class GameManager
 
     private static void checkLevel()
     {
-        if(xp >= xp_requirement)
+        level = xp / 100 + 1;
+        if(level > maxLevel)
+        {
+            level = maxLevel;
+        }
+        /*if(xp >= xp_requirement)
         {
             if (max_level > level)
             {
-                last_xp_requirement = xp_requirement;
-                xp_requirement += level * 50;
-                level++;
+                //last_xp_requirement = xp_requirement;
+                //xp_requirement += 100;
             }
             else
             {
@@ -67,10 +72,10 @@ public static class GameManager
                     xp = xp_requirement;
                 }
             }
-        }
-        if(xp < last_xp_requirement)
+        }*/
+        if(xp > maxXp)
         {
-            xp = last_xp_requirement;
+            xp = maxXp;
         }
     }
 

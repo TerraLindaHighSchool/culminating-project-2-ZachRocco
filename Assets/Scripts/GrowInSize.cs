@@ -2,12 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DetectColisions : MonoBehaviour
+public class GrowInSize : MonoBehaviour
 {
-    public int hp = 10;
-
-    public GameObject projectileDestroyer;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -17,20 +13,18 @@ public class DetectColisions : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(hp <= 0)
+        transform.localScale += new Vector3(Time.deltaTime * 50, Time.deltaTime * 50, Time.deltaTime * 50);
+        if(transform.localScale.x >= 100)
         {
-            Instantiate(projectileDestroyer, new Vector3(transform.position.x, transform.position.y, transform.position.z), gameObject.transform.rotation);
             Destroy(gameObject);
         }
     }
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (other.gameObject.CompareTag("Enemy"))
         {
             Destroy(other.gameObject);
-            hp--;
-            GameManager.addXp(1);
         }
     }
 }
