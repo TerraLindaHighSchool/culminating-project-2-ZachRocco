@@ -7,6 +7,7 @@ public class DetectColisions : MonoBehaviour
     public int hp = 10;
 
     public GameObject projectileDestroyer;
+    public GameObject completionScreen;
 
     // Start is called before the first frame update
     void Start()
@@ -20,6 +21,7 @@ public class DetectColisions : MonoBehaviour
         if(hp <= 0)
         {
             Instantiate(projectileDestroyer, new Vector3(transform.position.x, transform.position.y, transform.position.z), gameObject.transform.rotation);
+            completionScreen.SetActive(true);
             Destroy(gameObject);
         }
     }
@@ -30,7 +32,10 @@ public class DetectColisions : MonoBehaviour
         {
             Destroy(other.gameObject);
             hp--;
-            GameManager.addXp(1);
+            if (Random.Range(0, 100) > 50)
+            {
+                GameManager.addXp(1);
+            }
         }
     }
 }

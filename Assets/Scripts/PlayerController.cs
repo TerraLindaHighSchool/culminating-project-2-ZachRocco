@@ -15,9 +15,7 @@ public class PlayerController : MonoBehaviour
     private float zRangeNeg = -8;
     public GameObject projectilePrefab;
     private int lives = 3;
-    private bool gameover;
-    public TextMeshProUGUI gameOverText;
-    public GameObject menuButton;
+    public GameObject gameOverObject;
     public TextMeshProUGUI energyHUD;
     public TextMeshProUGUI livesHUD;
     public GameObject projectileDestroyer;
@@ -43,70 +41,66 @@ public class PlayerController : MonoBehaviour
     {
         if (lives <= 0)
         {
-            gameover = true;
-            Debug.Log("ship will explode here");
-            gameOverText.gameObject.SetActive(true);
-            menuButton.gameObject.SetActive(true);
+            HUDManager();
+            gameOverObject.gameObject.SetActive(true);
+            gameObject.SetActive(false);
+        }
+        //slow movement w/shift
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            speed = normSpeed / 2;
+        }
+        else speed = normSpeed;
+
+        horizontalInput = Input.GetAxis("Horizontal");
+        verticalInput = Input.GetAxis("Vertical");
+        var combinedInput = new Vector3(horizontalInput, 0.0f, verticalInput);
+        transform.Translate(combinedInput.normalized * Time.deltaTime * speed);
+        //keep player in bound :)
+        if (transform.position.x < -xRange)
+        {
+            transform.position = new Vector3(-xRange, transform.position.y, transform.position.z);
+        }
+        if (transform.position.x > xRange)
+        {
+            transform.position = new Vector3(xRange, transform.position.y, transform.position.z);
+        }
+        if (transform.position.z < zRangeNeg)
+        {
+            transform.position = new Vector3(transform.position.x, transform.position.y, zRangeNeg);
+        }
+        if (transform.position.z > zRangePos)
+        {
+            transform.position = new Vector3(transform.position.x, transform.position.y, zRangePos);
         }
 
-        if (!gameover)
+        //fire weapon
+        if ((Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.Z)) && shotCooldown <= 0.0f)
         {
-            //slow movement w/shift
-            if (Input.GetKey(KeyCode.LeftShift))
-            {
-                speed = normSpeed / 2;
-            }
-            else speed = normSpeed;
+            //Launch Projectile. . :D
+            fireProjectile();
+        }
+        shotCooldown -= Time.deltaTime;
 
-            horizontalInput = Input.GetAxis("Horizontal");
-            verticalInput = Input.GetAxis("Vertical");
-            var combinedInput = new Vector3(horizontalInput, 0.0f, verticalInput);
-            transform.Translate(combinedInput.normalized * Time.deltaTime * speed);
-            //keep player in bound :)
-            if (transform.position.x < -xRange)
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            if (GameManager.getXp(0) >= GameManager.getXp(2) + 100)
             {
-                transform.position = new Vector3(-xRange, transform.position.y, transform.position.z);
+                GameManager.addXp(-100);
+                Instantiate(projectileDestroyer, new Vector3(transform.position.x, transform.position.y, transform.position.z), projectilePrefab.transform.rotation);
             }
-            if (transform.position.x > xRange)
-            {
-                transform.position = new Vector3(xRange, transform.position.y, transform.position.z);
-            }
-            if (transform.position.z < zRangeNeg)
-            {
-                transform.position = new Vector3(transform.position.x, transform.position.y, zRangeNeg);
-            }
-            if (transform.position.z > zRangePos)
-            {
-                transform.position = new Vector3(transform.position.x, transform.position.y, zRangePos);
-            }
+        }
 
-            //fire weapon
-            if ((Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.Z)) && shotCooldown <= 0.0f)
-            {
-                //Launch Projectile. . :D
-                fireProjectile();
-            }
-            shotCooldown -= Time.deltaTime;
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            GameManager.addXp(25);
+            Debug.Log(GameManager.getXp(0));
+        }
 
-            if (Input.GetKeyDown(KeyCode.X))
-            {
-                if (GameManager.getXp(0) >= GameManager.getXp(2) + 100)
-                {
-                    GameManager.addXp(-100);
-                }
-            }
-
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                GameManager.addXp(25);
-                Debug.Log(GameManager.getXp(0));
-            }
-
-            if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                previousScene = SceneManager.GetActiveScene();
-                GameManager.gotoStage(-1);
-            }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            previousScene = SceneManager.GetActiveScene();
+            GameManager.gotoStage(-1);
         }
     }
 
@@ -114,6 +108,17 @@ public class PlayerController : MonoBehaviour
     {
         previousScene = SceneManager.GetActiveScene();
         GameManager.gotoStage(0);
+    }
+
+    public void gotoNextStage()
+    {
+        previousScene = SceneManager.GetActiveScene();
+        GameManager.gotoStage(-1);
+    }
+
+    public void reloadStage()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     private void fireProjectile()

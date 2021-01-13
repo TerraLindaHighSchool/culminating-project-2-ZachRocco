@@ -21,7 +21,6 @@ public static class GameManager
     private static int level = 1;
     private static int xp;
     private static int xpRequirement = 100;
-    private static int lastXpRequirement;
     private static int maxLevel = 5;
     private static int maxXp = 500;
 
@@ -44,8 +43,6 @@ public static class GameManager
                 return xp;
             case 1:
                 return xpRequirement;
-            case 2:
-                return lastXpRequirement;
             default:
                 return 0;
         }

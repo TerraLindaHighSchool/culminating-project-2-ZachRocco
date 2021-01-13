@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Boss1AI : MonoBehaviour
+public class Boss2AI : MonoBehaviour
 {
     public GameObject projectilePrefab;
 
@@ -30,6 +30,10 @@ public class Boss1AI : MonoBehaviour
         {
             attack();
         }
+        if (transform.position.z > 6 && attackPhase == 2)
+        {
+            transform.Translate(new Vector3(0, 0, -0.1f));
+        }
     }
 
     private void attack()
@@ -55,21 +59,45 @@ public class Boss1AI : MonoBehaviour
 
     IEnumerator attack1()
     {
-        cooldown = 2;
+        cooldown = 10;
         yield return new WaitForSeconds(1);
-        Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), projectilePrefab.transform.rotation);
-        Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.Euler(0, 190, 0));
-        Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.Euler(0, 170, 0));
-        Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.LookRotation(player.transform.position - transform.position));
-        yield return new WaitForSeconds(1);
-        Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), projectilePrefab.transform.rotation);
-        Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.Euler(0, 200, 0));
-        Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.Euler(0, 160, 0));
-        attackPhase = 2;
-        if (GetComponent<DetectColisions>().hp <= 150)
+        for (int i = 0; i < 36; i++)
         {
-            attackPhase = 3;
-            cooldown = 1;
+            Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.Euler(0, 10 * i, 0));
+        }
+        yield return new WaitForSeconds(1);
+        for (int i = 0; i < 36; i++)
+        {
+            Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.Euler(0, 10 * i + 5, 0));
+        }
+        yield return new WaitForSeconds(1);
+        for (int i = 0; i < 36; i++)
+        {
+            Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.Euler(0, 5 * i, 0));
+            Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.Euler(0, 5 * -i, 0));
+            yield return new WaitForSeconds(0.025f);
+        }
+        yield return new WaitForSeconds(0.5f);
+        for (int i = 0; i < 3; i++)
+        {
+            Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.Euler(0, 182, 0));
+            Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.Euler(0, 184, 0));
+            Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.Euler(0, 176, 0));
+            Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.Euler(0, 178, 0));
+            Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.Euler(0, 180, 0));
+            yield return new WaitForSeconds(0.5f);
+        }
+        yield return new WaitForSeconds(0.5f);
+        for (int i = 0; i < 36; i++)
+        {
+            Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.Euler(0, 10 * i - 5, 0));
+            Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.Euler(0, 10 * -i + 5, 0));
+            yield return new WaitForSeconds(0.025f);
+        }
+        if (GetComponent<DetectColisions>().hp <= 100)
+        {
+            attackPhase = 2;
+            cooldown = 2;
         }
     }
 
@@ -77,19 +105,11 @@ public class Boss1AI : MonoBehaviour
     {
         cooldown = 2;
         yield return new WaitForSeconds(0.2f);
-        Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.LookRotation(player.transform.position - transform.position));
-        yield return new WaitForSeconds(0.2f);
-        Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.LookRotation(player.transform.position - transform.position));
-        yield return new WaitForSeconds(0.2f);
-        Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.LookRotation(player.transform.position - transform.position));
-        yield return new WaitForSeconds(0.2f);
-        Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.LookRotation(player.transform.position - transform.position));
-        yield return new WaitForSeconds(3);
-        attackPhase = 1;
-        if (GetComponent<DetectColisions>().hp <= 150)
+        for (int i = 0; i < 36; i++)
         {
-            attackPhase = 3;
-            cooldown = 1;
+            Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.Euler(0, 5 * i + 90, 0));
+            Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.Euler(0, 5 * i + 180 + 90, 0));
+            yield return new WaitForSeconds(0.075f);
         }
     }
 
