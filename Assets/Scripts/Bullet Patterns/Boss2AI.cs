@@ -20,7 +20,7 @@ public class Boss2AI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        cooldown -= Time.deltaTime;
+        cooldown -= Time.deltaTime/ GameManager.getDifficulty();
         if (transform.position.z > 18)
         {
             transform.Translate(new Vector3(0, 0, -0.05f));
@@ -30,9 +30,10 @@ public class Boss2AI : MonoBehaviour
         {
             attack();
         }
-        if (transform.position.z > 6 && attackPhase == 2)
+
+        if (transform.position.z > 24 && attackPhase == 2)
         {
-            transform.Translate(new Vector3(0, 0, -0.1f));
+            transform.Translate(new Vector3(0, 0, -0.05f));
         }
     }
 
@@ -65,12 +66,12 @@ public class Boss2AI : MonoBehaviour
         {
             Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.Euler(0, 10 * i, 0));
         }
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(1 * GameManager.getDifficulty());
         for (int i = 0; i < 36; i++)
         {
             Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.Euler(0, 10 * i + 5, 0));
         }
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(1 * GameManager.getDifficulty());
         for (int i = 0; i < 36; i++)
         {
             Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.Euler(0, 5 * i, 0));
@@ -94,7 +95,7 @@ public class Boss2AI : MonoBehaviour
             Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.Euler(0, 10 * -i + 5, 0));
             yield return new WaitForSeconds(0.025f);
         }
-        if (GetComponent<DetectColisions>().hp <= 100)
+        if (GetComponent<DetectColisions>().hp <= 200)
         {
             attackPhase = 2;
             cooldown = 2;
@@ -104,7 +105,7 @@ public class Boss2AI : MonoBehaviour
     IEnumerator attack2()
     {
         cooldown = 2;
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.2f * GameManager.getDifficulty());
         for (int i = 0; i < 36; i++)
         {
             Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.Euler(0, 5 * i + 90, 0));

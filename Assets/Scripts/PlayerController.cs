@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     private float zRangePos = 23;
     private float zRangeNeg = -8;
     public GameObject projectilePrefab;
+    public GameObject projectilePrefabBomb;
     private int lives = 3;
     public GameObject gameOverObject;
     public TextMeshProUGUI energyHUD;
@@ -87,20 +88,8 @@ public class PlayerController : MonoBehaviour
             if (GameManager.getXp(0) >= GameManager.getXp(2) + 100)
             {
                 GameManager.addXp(-100);
-                Instantiate(projectileDestroyer, new Vector3(transform.position.x, transform.position.y, transform.position.z), projectilePrefab.transform.rotation);
+                StartCoroutine(bomb());
             }
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            GameManager.addXp(25);
-            Debug.Log(GameManager.getXp(0));
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            previousScene = SceneManager.GetActiveScene();
-            GameManager.gotoStage(-1);
         }
     }
 
@@ -122,41 +111,19 @@ public class PlayerController : MonoBehaviour
     }
 
     private void fireProjectile()
+    {
+        shotCooldown = 0.1f;
+        Instantiate(projectilePrefab, new Vector3(transform.position.x + 0.5f, transform.position.y, transform.position.z + 2), projectilePrefab.transform.rotation);
+        Instantiate(projectilePrefab, new Vector3(transform.position.x - 0.5f, transform.position.y, transform.position.z + 2), projectilePrefab.transform.rotation);
+    }
+
+    IEnumerator bomb()
+    {
+        for (int i = 0; i < 36; i++)
         {
-        switch(GameManager.getLevel())
-        {
-            case 1:
-                shotCooldown = 0.1f;
-                Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z + 2), projectilePrefab.transform.rotation);
-                break;
-            case 2:
-                shotCooldown = 0.1f;
-                Instantiate(projectilePrefab, new Vector3(transform.position.x + 0.5f, transform.position.y, transform.position.z + 2), projectilePrefab.transform.rotation);
-                Instantiate(projectilePrefab, new Vector3(transform.position.x - 0.5f, transform.position.y, transform.position.z + 2), projectilePrefab.transform.rotation);
-                break;
-            case 3:
-                shotCooldown = 0.1f;
-                Instantiate(projectilePrefab, new Vector3(transform.position.x + 0.75f, transform.position.y, transform.position.z + 2), Quaternion.Euler(0, 2, 0));
-                Instantiate(projectilePrefab, new Vector3(transform.position.x - 0.75f, transform.position.y, transform.position.z + 2), Quaternion.Euler(0, -2, 0));
-                Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z + 2), projectilePrefab.transform.rotation);
-                break;
-            case 4:
-                shotCooldown = 0.1f;
-                Instantiate(projectilePrefab, new Vector3(transform.position.x + 1, transform.position.y, transform.position.z + 2), Quaternion.Euler(0, 5, 0));
-                Instantiate(projectilePrefab, new Vector3(transform.position.x - 1, transform.position.y, transform.position.z + 2), Quaternion.Euler(0, -5, 0));
-                Instantiate(projectilePrefab, new Vector3(transform.position.x + 0.5f, transform.position.y, transform.position.z + 2), Quaternion.Euler(0, 1, 0));
-                Instantiate(projectilePrefab, new Vector3(transform.position.x - 0.5f, transform.position.y, transform.position.z + 2), Quaternion.Euler(0, -1, 0));
-                break;
-            case 5:
-                shotCooldown = 0.1f;
-                Instantiate(projectilePrefab, new Vector3(transform.position.x + 1, transform.position.y, transform.position.z + 2), Quaternion.Euler(0, 10, 0));
-                Instantiate(projectilePrefab, new Vector3(transform.position.x - 1, transform.position.y, transform.position.z + 2), Quaternion.Euler(0, -10, 0));
-                Instantiate(projectilePrefab, new Vector3(transform.position.x + 0.5f, transform.position.y, transform.position.z + 2), Quaternion.Euler(0, 5, 0));
-                Instantiate(projectilePrefab, new Vector3(transform.position.x - 0.5f, transform.position.y, transform.position.z + 2), Quaternion.Euler(0, -5, 0));
-                Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z + 2), projectilePrefab.transform.rotation);
-                break;
-            default:
-                break;
+            Instantiate(projectilePrefabBomb, new Vector3(transform.position.x, transform.position.y, transform.position.z + 2), Quaternion.Euler(0, Random.Range(0, 40) - 20, 0));
+            Instantiate(projectilePrefabBomb, new Vector3(transform.position.x, transform.position.y, transform.position.z + 2), Quaternion.Euler(0, Random.Range(0, 40) - 20, 0));
+            yield return new WaitForSeconds(0.005f);
         }
     }
 
@@ -164,7 +131,6 @@ public class PlayerController : MonoBehaviour
     {
         HUDManager();
         iframes -= Time.deltaTime;
-        Debug.Log(iframes);
     }
 
     private void HUDManager()

@@ -20,7 +20,7 @@ public class Boss1AI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        cooldown -= Time.deltaTime;
+        cooldown -= Time.deltaTime/ GameManager.getDifficulty();
         if (transform.position.z > 18)
         {
             transform.Translate(new Vector3(0, 0, -0.05f));
@@ -56,17 +56,17 @@ public class Boss1AI : MonoBehaviour
     IEnumerator attack1()
     {
         cooldown = 2;
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(1* GameManager.getDifficulty());
         Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), projectilePrefab.transform.rotation);
         Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.Euler(0, 190, 0));
         Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.Euler(0, 170, 0));
         Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.LookRotation(player.transform.position - transform.position));
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(1* GameManager.getDifficulty());
         Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), projectilePrefab.transform.rotation);
         Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.Euler(0, 200, 0));
         Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.Euler(0, 160, 0));
         attackPhase = 2;
-        if (GetComponent<DetectColisions>().hp <= 150)
+        if (GetComponent<DetectColisions>().hp <= 200)
         {
             attackPhase = 3;
             cooldown = 1;
@@ -86,7 +86,7 @@ public class Boss1AI : MonoBehaviour
         Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.LookRotation(player.transform.position - transform.position));
         yield return new WaitForSeconds(3);
         attackPhase = 1;
-        if (GetComponent<DetectColisions>().hp <= 150)
+        if (GetComponent<DetectColisions>().hp <= 200)
         {
             attackPhase = 3;
             cooldown = 1;
@@ -96,7 +96,7 @@ public class Boss1AI : MonoBehaviour
     IEnumerator attack3()
     {
         cooldown = 1;
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.5f* GameManager.getDifficulty());
         Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), projectilePrefab.transform.rotation);
         Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.Euler(0, 190, 0));
         Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.Euler(0, 170, 0));
@@ -105,7 +105,7 @@ public class Boss1AI : MonoBehaviour
         Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), projectilePrefab.transform.rotation);
         Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.Euler(0, 200, 0));
         Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.Euler(0, 160, 0));
-        if (GetComponent<DetectColisions>().hp <= 75)
+        if (GetComponent<DetectColisions>().hp <= 100)
         {
             attackPhase = 4;
             cooldown = 1;

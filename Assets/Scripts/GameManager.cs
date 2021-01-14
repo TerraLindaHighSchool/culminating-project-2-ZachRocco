@@ -23,6 +23,7 @@ public static class GameManager
     private static int xpRequirement = 100;
     private static int maxLevel = 5;
     private static int maxXp = 500;
+    private static float difficulty = 1;
 
     public static void addXp(int xpToAdd)
     {
@@ -91,5 +92,15 @@ public static class GameManager
     public static int getStage()
     {
         return currentStage;
+    }
+
+    public static void setDifficulty(float input)
+    {
+        difficulty = input;
+    }
+
+    public static float getDifficulty()
+    {
+        return difficulty;
     }
 }

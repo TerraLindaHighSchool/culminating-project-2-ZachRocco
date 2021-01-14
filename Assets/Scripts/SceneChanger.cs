@@ -23,8 +23,15 @@ public class SceneChanger : MonoBehaviour
         SceneManager.UnloadSceneAsync(0);
     }
 
-    public void changeScene()
+    public void easy()
     {
+        GameManager.setDifficulty(2);
+        GameManager.gotoStage(1);
+    }
+
+    public void hard()
+    {
+        GameManager.setDifficulty(1);
         GameManager.gotoStage(1);
     }
 }

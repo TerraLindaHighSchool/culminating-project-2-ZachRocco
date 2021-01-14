@@ -37,5 +37,11 @@ public class DetectColisions : MonoBehaviour
                 GameManager.addXp(1);
             }
         }
+        else
+        if (other.gameObject.CompareTag("Bomb"))
+        {
+            Destroy(other.gameObject);
+            hp--;
+        }
     }
 }
